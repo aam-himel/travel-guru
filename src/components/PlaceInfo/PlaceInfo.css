@@ -1,0 +1,31 @@
+.place-info {
+    
+}
+
+.main-title {
+    font-size: 3rem;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding-bottom: 1rem;
+    color: white;
+}
+
+.main-subtitle {
+    color: white;
+    font-size: 18px;
+    padding: 16px 10px 16px 0;
+    font-weight: 300;
+}
+
+.btn-booking {
+    border: none;
+    cursor: pointer;
+    transition: .1s;
+    text-transform: uppercase;
+    background-color: #F9A51A;
+}
+
+.btn-booking:hover {
+    transform: translateX(2px);
+}
