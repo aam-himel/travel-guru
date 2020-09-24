@@ -1,9 +1,8 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react'
-import FakeHotelData from '../data/FakeHotelData';
 import img1 from '../../Images/hotel1.png';
 import starImg from '../../Icon/star.png'
-import { faFileExcel } from '@fortawesome/free-solid-svg-icons';
+
 const useStyle = makeStyles(theme => ({
     root: {
         margin:'.2rem 0',
@@ -34,7 +33,7 @@ const useStyle = makeStyles(theme => ({
 
 const HotelRoom = (props) => {
     const classes = useStyle();
-    const {id, description, imgUrl, pricePerNight, roomTitle, stars, facilities, price} = props.data;
+    const { description, pricePerNight, roomTitle, stars, facilities} = props.data;
     return (
         <Grid container justify="center" className={classes.root} spacing={2}> 
         

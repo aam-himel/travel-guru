@@ -7,6 +7,7 @@ import Booking from './components/booking/Booking';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import Hotel from './components/hotel/Hotel';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 export const UserContext = createContext();
 
@@ -37,10 +38,13 @@ function App() {
           <SignUp />
         </Route>
 
-        <Route exact path="/hotel">
+        <PrivateRoute exact path="/hotel">
           <Hotel />
-        </Route>
+        </PrivateRoute>
 
+        <Route exact path="/booking">
+          <Booking />
+        </Route>
         </Switch>
       </Router>
       </UserContext.Provider>

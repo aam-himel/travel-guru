@@ -1,24 +1,20 @@
 import React, {useContext, useState} from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import {FormHelperText} from '@material-ui/core';
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {} from '@fortawesome/fontawesome-svg-core';
-import {faGoogle, fa500px} from '@fortawesome/free-brands-svg-icons'
 import * as firebase from "firebase/app";
 // Add the Firebase services that you want to use
 import "firebase/auth";
 import firebaseConfig from "./firebase.config";
 import { UserContext } from "../../App";
+import { useFormik } from "formik";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,7 +58,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SignUp() {
+// Signup using email and password
+const initialValues = {
+  firstName: '',
+  lastName: '',
+  email: "",
+  password: "",
+};
+
+const onSubmit = (values) => {
+  
+};
+
+const validate = (values) => {
+  let errors = {};
+  if(!values.firstName){
+    errors.firstName = "Required"
+  }
+  if(!values.lastName){
+    errors.lastName = "Required"
+  }
+  if (!values.email) {
+    errors.email = "Email is Required!";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = "Invalid email format!";
+  }
+  if (!values.password) {
+    errors.password = "Password can not be Empty!";
+  }
+  if (!values.confirmPassword) {
+    errors.confirmPassword = "Password can not be Empty!";
+  }else if(values.confirmPassword !== values.password){
+    errors.confirmPassword = "Password Did't matched!";
+  }
+  return errors;
+};
+
+
+const SignUp = () => {
 
 
   const classes = useStyles();
@@ -72,6 +105,12 @@ export default function SignUp() {
     email: "",
     photoURL: "",
     displayName: "",
+  });
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validate,
   });
 
     // Handle Google SignIn method 
@@ -101,9 +140,20 @@ export default function SignUp() {
     firebase.auth().signInWithPopup(provider)
     .then(res => {
       console.log(res.user);
+      const { isSignIn, email, photoURL, displayName } = res.user;
+      const newSignInUser = {
+        isSignIn: true,
+        email: email,
+        photoURL,
+        name: displayName,
+      };
+      setUser(newSignInUser);
+      setLoggedInUser(newSignInUser);
     })
   }
 
+  console.log("signup formik touch",formik.touched)
+  console.log("signup formik error",formik.errors)
   return (
     <Container component="main" maxWidth="xs" >
       <CssBaseline />
@@ -111,7 +161,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -122,8 +172,14 @@ export default function SignUp() {
                 fullWidth
                 id="firstName"
                 label="First Name"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
                 autoFocus
               />
+            
+            {
+              formik.touched.firstName && formik.errors.firstName ? <FormHelperText error>{formik.errors.firstName}</FormHelperText>  : null
+            }
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -134,7 +190,12 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
+            {
+              formik.touched.lastName && formik.errors.lastName ? <FormHelperText error>{formik.errors.lastName}</FormHelperText>  : null
+            }
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -145,7 +206,12 @@ export default function SignUp() {
                 label="Username or Email"
                 name="email"
                 autoComplete="email"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
+              {
+                formik.touched.email && formik.errors.email ? <FormHelperText error>{formik.errors.email}</FormHelperText>  : null
+              }
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -156,8 +222,12 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
+              {
+                formik.touched.password && formik.errors.password ? <FormHelperText error>{formik.errors.password}</FormHelperText>  : null
+              }
             </Grid>
 
             <Grid item xs={12}>
@@ -165,12 +235,16 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
+                name="confirmPassword"
                 label="Confirm Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                type="confirm-password"
+                id="confirmPassword"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
+              {
+                formik.touched.confirmPassword && formik.errors.confirmPassword ? <FormHelperText error>{formik.errors.confirmPassword}</FormHelperText>  : null
+              }
             </Grid>
 
             {/* <Grid item xs={12}>
@@ -217,3 +291,6 @@ export default function SignUp() {
     </Container>
   );
 }
+
+
+export default SignUp;

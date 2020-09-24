@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   Container,
+  FormHelperText
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,7 +19,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from "./firebase.config";
 import { UserContext } from "../../App";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 // Styles
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -102,16 +103,15 @@ const SignIn = () => {
     name: "",
   });
 
-  console.log(formik.values.email);
  
   //  Handle signin with email and password
   const handleEmailSignIn = () => {
-    if(formik.values){
+    if(formik.values.email && formik.values.password){
 
       const {email, password} = formik.values;
       firebase
       .auth()
-      .loginUserWithEmailAndPassword(email, password)
+      .signInWithEmailAndPassword(email, password)
       .then(res => {
         console.log(res);
       })
@@ -123,9 +123,13 @@ const SignIn = () => {
     }
     
   }
+
+  console.log("formik touch",formik.touched)
+  console.log("formik error",formik.errors)
   // Handle Google SignIn method
   const handleGoogleSignIn = (e) => {
-    console.log(e);
+
+
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase
       .auth()
@@ -146,11 +150,12 @@ const SignIn = () => {
 
   // TEst create Account
   const testAccount = () => {
-    firebase.auth().createUserWithEmailAndPassword(formik.values.email, formik.values.password).catch(function(error) {
+    firebase.auth().createUserWithEmailAndPassword(formik.values.email, formik.values.password).
+    catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
-      console.log(errorMessage);
+      console.log(errorMessage, errorCode);
       // ...
     });
   }
@@ -191,6 +196,10 @@ const SignIn = () => {
             
             onBlur={formik.handleBlur}
           />
+          
+          {
+            formik.touched.email && formik.errors.email ? <FormHelperText error>{formik.errors.email}</FormHelperText>  : null
+          }
           <TextField
             variant="outlined"
             margin="normal"
@@ -204,10 +213,14 @@ const SignIn = () => {
             
             onBlur={formik.handleBlur}
           />
+          {
+            formik.touched.password && formik.errors.password ? <FormHelperText error>{formik.errors.password}</FormHelperText>  : null
+          }
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+
           <Button
             type="submit"
             fullWidth

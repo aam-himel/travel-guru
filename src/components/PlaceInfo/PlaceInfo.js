@@ -10,7 +10,7 @@ function PlaceInfo(props) {
     const place = props.place;
 
     const handleBooking = (e) => {
-        e.preventDefault();
+        
     }
 
     return (
@@ -19,7 +19,13 @@ function PlaceInfo(props) {
                 place.placeName && <>
                     <h1 className="main-title"> {place.placeName} </h1>
                     <p className="main-subtitle"> {place.details} </p>
-                    <button className="btn btn-booking" onClick={handleBooking}>Booking! </button>
+                    
+                    <Link to="/booking" className="btn btn-booking">
+                        Booking
+                    </Link>
+                    {/* <button className="btn btn-booking" > 
+                        
+                    </button> */}
                 </>
             }
         </div>
