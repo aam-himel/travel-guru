@@ -1,13 +1,17 @@
 nav .logo {
-    height: 56px;
+    width: 100px;
     z-index: 2;
+    padding-bottom: 1rem;
 }
-
+nav .logo:hover {
+    cursor: pointer;
+}
 nav {
     padding-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .links {
@@ -22,6 +26,7 @@ nav {
 
 .links li a {
     text-decoration: none;
-    color: rgb(240, 238, 238);
+    
+    color: darkcyan;
     font-weight: 300;
 }

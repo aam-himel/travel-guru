@@ -8,6 +8,7 @@
 
 body {
   font-family: 'Fira Sans', sans-serif;
+  
 }
 
 ul {
@@ -27,4 +28,11 @@ a {
   font-weight: 600;
   padding: 10px 22px;
   background-color: darkkhaki;
+}
+.text-orange {
+  color: #F9A51A;
+}
+
+.px-2 {
+  padding: 0 2rem;
 }

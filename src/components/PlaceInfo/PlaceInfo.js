@@ -9,8 +9,8 @@ function PlaceInfo(props) {
     const [coxbazar] = FakeTravelInfo;
     const place = props.place;
 
-    const handleBooking = () => {
-        
+    const handleBooking = (e) => {
+        e.preventDefault();
     }
 
     return (
