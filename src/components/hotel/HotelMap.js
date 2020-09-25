@@ -1,9 +1,10 @@
 import React from 'react';
+import Map from '../travel/Map';
 
 const HotelMap = () => {
     return (
         <div>
-            <h1>Hotel map</h1>
+            <Map />
         </div>
     )
 }

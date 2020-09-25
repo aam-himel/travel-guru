@@ -15,7 +15,8 @@ import "firebase/auth";
 import firebaseConfig from "./firebase.config";
 import { UserContext } from "../../App";
 import { useFormik } from "formik";
-
+import { createAccount, handleSignInWithFacebook, handleSignInWithGoogle } from "./LoginManager";
+import { useHistory, useLocation } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(3),
@@ -100,6 +101,10 @@ const SignUp = () => {
 
   const classes = useStyles();
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+  let history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
+  
   const [user, setUser] = useState({
     isSignIn: false,
     email: "",
@@ -114,46 +119,53 @@ const SignUp = () => {
   });
 
     // Handle Google SignIn method 
-    const handleGoogleSignIn = (e) => {
-      console.log(e);
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then((res) => {
-          const { isSignIn, email, photoURL, displayName } = res.user;
+    // const handleGoogleSignIn = (e) => {
+    //   console.log(e);
+    //   const provider = new firebase.auth.GoogleAuthProvider();
+    //   firebase
+    //     .auth()
+    //     .signInWithPopup(provider)
+    //     .then((res) => {
+    //       const { isSignIn, email, photoURL, displayName } = res.user;
   
-          const newSignInUser = {
-            isSignIn: true,
-            email: email,
-            photoURL,
-            name: displayName,
-          };
-          setUser(newSignInUser);
-          setLoggedInUser(newSignInUser);
-        });
-    };
-
-  //  Handle Facebook Sign in method
-  const handleFacebookSignIn = () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    firebase.auth().signInWithPopup(provider)
+    //       const newSignInUser = {
+    //         isSignIn: true,
+    //         email: email,
+    //         photoURL,
+    //         name: displayName,
+    //       };
+    //       setUser(newSignInUser);
+    //       setLoggedInUser(newSignInUser);
+    //     });
+    // };
+      // Handle Google SignIn method
+  const handleGoogleSignIn = () => {
+    handleSignInWithGoogle()
     .then(res => {
-      console.log(res.user);
-      const { isSignIn, email, photoURL, displayName } = res.user;
-      const newSignInUser = {
-        isSignIn: true,
-        email: email,
-        photoURL,
-        name: displayName,
-      };
-      setUser(newSignInUser);
-      setLoggedInUser(newSignInUser);
+      setUser(res);
+      setLoggedInUser(res);
+      history.replace(from);
     })
   }
 
-  console.log("signup formik touch",formik.touched)
-  console.log("signup formik error",formik.errors)
+  // New Account
+  const createNewAccount = () => {
+    createAccount(formik.values.email, formik.values.password)
+    .then(res => {
+      setLoggedInUser(res);
+      history.replace(from);
+    })
+  }
+  //  Handle Facebook Sign in method
+  
+  const handleFacebookSignIn = () => {
+    handleSignInWithFacebook()
+    .then(res => {
+      setLoggedInUser(res);
+      history.replace(from);
+    })
+  }
+
   return (
     <Container component="main" maxWidth="xs" >
       <CssBaseline />
@@ -259,6 +271,7 @@ const SignUp = () => {
             fullWidth
             color="primary"
             className= {classes.submit}
+            onClick={createNewAccount}
           >
             Create an Account
           </Button>

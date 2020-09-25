@@ -10,16 +10,15 @@ import {
   Grid,
   Typography,
   Container,
-  FormHelperText
+  FormHelperText,
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import * as firebase from "firebase/app";
-// Add the Firebase services that you want to use
-import "firebase/auth";
-import firebaseConfig from "./firebase.config";
+
 import { UserContext } from "../../App";
 import { useFormik } from "formik";
+import { useHistory, useLocation } from "react-router-dom";
+import { handleSignInWithFacebook, handleSignInWithGoogle, initializeFramework, loginWithEmail } from "./LoginManager";
 // Styles
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,8 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-firebase.initializeApp(firebaseConfig);
-
 // Formik data
 
 const initialValues = {
@@ -64,9 +61,7 @@ const initialValues = {
   password: "",
 };
 
-const onSubmit = (values) => {
-  
-};
+const onSubmit = (values) => {};
 
 const validate = (values) => {
   let errors = {};
@@ -80,16 +75,21 @@ const validate = (values) => {
   }
   return errors;
 };
+
+initializeFramework();
 //  Sign in ------------------------------------------------------------------------------------
 
 const SignIn = () => {
-
+  let history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
+  console.log("from", from);
   const classes = useStyles();
 
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
-
+  console.log("Logged in user", loggedInUser);
   // Formik form control
-    //  Formik ----------------------------------------------
+  //  Formik ----------------------------------------------
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -103,78 +103,54 @@ const SignIn = () => {
     name: "",
   });
 
- 
   //  Handle signin with email and password
-  const handleEmailSignIn = () => {
-    if(formik.values.email && formik.values.password){
-
-      const {email, password} = formik.values;
-      firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
+  const handleEmailSignIn = (e) => {
+    console.log(e);
+    e.preventDefault();
+    if (formik.values.email && formik.values.password) {
+      const { email, password } = formik.values;
+      loginWithEmail(email, password)
       .then(res => {
-        console.log(res);
-      })
-      .catch(error => {
-        // let errorCode = error.code;
-        // let errorMessage = error.message;
-        // console.log(errorCode, errorMessage);
+        setLoggedInUser(res);
+        history.replace(from);
       })
     }
-    
-  }
+  };
 
-  console.log("formik touch",formik.touched)
-  console.log("formik error",formik.errors)
   // Handle Google SignIn method
-  const handleGoogleSignIn = (e) => {
-
-
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((res) => {
-        const { isSignIn, email, photoURL, displayName } = res.user;
-
-        const newSignInUser = {
-          isSignIn: true,
-          email: email,
-          photoURL,
-          name: displayName,
-        };
-        setUser(newSignInUser);
-        setLoggedInUser(newSignInUser);
-      });
-  };
-
-  // TEst create Account
-  const testAccount = () => {
-    firebase.auth().createUserWithEmailAndPassword(formik.values.email, formik.values.password).
-    catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorMessage, errorCode);
-      // ...
-    });
+  const handleGoogleSignIn = () => {
+    handleSignInWithGoogle()
+    .then(res => {
+      setUser(res);
+      setLoggedInUser(res);
+      history.replace(from);
+    })
   }
 
+  // // TEst create Account
   //  Handle Facebook Sign in method
+  
   const handleFacebookSignIn = () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((res) => {
-        console.log(res.user);
-      });
-  };
+    handleSignInWithFacebook()
+    .then(res => {
+      setLoggedInUser(res);
+      history.replace(from);
+    })
+  }
 
-
+  // //  Handle Facebook Sign in method
+  // const handleFacebookSignIn = () => {
+  //   const provider = new firebase.auth.FacebookAuthProvider();
+  //   firebase
+  //     .auth()
+  //     .signInWithPopup(provider)
+  //     .then((res) => {
+  //       console.log(res.user);
+  //     });
+  // };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -193,13 +169,12 @@ const SignIn = () => {
             autoFocus
             onChange={formik.handleChange}
             value={formik.values.email}
-            
             onBlur={formik.handleBlur}
           />
-          
-          {
-            formik.touched.email && formik.errors.email ? <FormHelperText error>{formik.errors.email}</FormHelperText>  : null
-          }
+
+          {formik.touched.email && formik.errors.email ? (
+            <FormHelperText error>{formik.errors.email}</FormHelperText>
+          ) : null}
           <TextField
             variant="outlined"
             margin="normal"
@@ -210,12 +185,11 @@ const SignIn = () => {
             id="password"
             value={formik.values.password}
             onChange={formik.handleChange}
-            
             onBlur={formik.handleBlur}
           />
-          {
-            formik.touched.password && formik.errors.password ? <FormHelperText error>{formik.errors.password}</FormHelperText>  : null
-          }
+          {formik.touched.password && formik.errors.password ? (
+            <FormHelperText error>{formik.errors.password}</FormHelperText>
+          ) : null}
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -231,11 +205,12 @@ const SignIn = () => {
           >
             Login
           </Button>
-          <Button onClick={testAccount} fullWidth
+
+          {/* <Button fullWidth
             variant="contained"
             color="primary">
             create account
-          </Button>
+          </Button> */}
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

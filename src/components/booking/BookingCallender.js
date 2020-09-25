@@ -12,6 +12,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
 // import {
 //     MuiPickersUtilsProvider,
 //     KeyboardTimePicker,
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     background: "#F9A51A",
+    display:'block',
     "&:hover": {
       background: "#F9A318",
     },
@@ -56,13 +59,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 const BookingCallender = () => {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
   return (
     <Grid className={`${classes.input}`}>
       <Typography variant="body1" gutterBottom>
@@ -86,13 +86,30 @@ const BookingCallender = () => {
         placeholder="Cox's bazar"
       ></FilledInput>
 
-      <Grid container className={classes.marginTop}>
-        <Grid item xs={6}>
-          <FilledInput disableUnderline margin="dense"></FilledInput>
-        </Grid>
-        <Grid item xs={6}>
-          <FilledInput disableUnderline margin="dense" gutterBottom></FilledInput>
-        </Grid>
+      <Grid container  >
+      
+      <div className="date-sec" style={{ padding: "20px 20px 20px 0", color: "#fff", display:'flex' }}>
+        <div style={{marginRight:'2rem'}}>
+          <p>From</p>
+          <DatePicker
+            selected={startDate}
+            className="date-picker"
+            onChange={date => setStartDate(date)}
+            // calendarContainer={MyContainer}
+          />
+        </div>
+        <div>
+          <p>To</p>
+          <DatePicker
+            selected={endDate}
+            className="date-picker"
+            onChange={date => setEndDate(date)}
+          />
+        </div>
+         
+        
+      </div>
+      
         <Link to="/hotel">
         <Button
             type="submit"
@@ -100,10 +117,11 @@ const BookingCallender = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            
           >
               Start Booking
           </Button>
-            </Link>
+          </Link>
       </Grid>
     </Grid>
   );

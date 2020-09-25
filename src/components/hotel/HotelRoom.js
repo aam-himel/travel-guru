@@ -42,7 +42,7 @@ const HotelRoom = (props) => {
             </Grid>
             <Grid item xs={6} className={classes.px}>
                 <h3 style={{marginBottom: '1rem'}}> {roomTitle} </h3>
-                <Typography variant="p" className={classes.py}>
+                <Typography variant="caption" className={classes.py}>
                    {facilities.guests} guest {facilities.beds} beds {facilities.bedRooms} bedrooms
                 </Typography>
                 <Typography variant="body1" className={classes.py}>{description}</Typography>

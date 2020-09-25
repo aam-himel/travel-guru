@@ -39,3 +39,14 @@ a {
 .calender {
   background-color: black;
 }
+.date-picker {
+  padding: 1rem 2rem;
+  background-color: #009b81;
+  color: whitesmoke;
+  border: none;
+
+}
+
+.date-picker:hover {
+  cursor: pointer;
+}

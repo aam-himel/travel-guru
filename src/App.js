@@ -20,7 +20,7 @@ function App() {
 
       <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <Router>
-        <Navbar />
+      <Navbar />
         <Switch>
         <Route exact path="/">
           <Home />
@@ -30,19 +30,19 @@ function App() {
           <Booking />
         </Route>
 
-        <Route exact path="/signin">
+        <Route path="/signin">
           <SignIn/>
         </Route>
 
-        <Route exact path="/signup">
+        <Route  path="/signup">
           <SignUp />
         </Route>
 
-        <PrivateRoute exact path="/hotel">
+        <PrivateRoute  path="/hotel">
           <Hotel />
         </PrivateRoute>
 
-        <Route exact path="/booking">
+        <Route  path="/booking">
           <Booking />
         </Route>
         </Switch>

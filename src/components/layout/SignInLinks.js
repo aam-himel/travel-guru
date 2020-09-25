@@ -8,7 +8,7 @@ function SignInLinks() {
     return (
         <div>
             {
-                (loggedInUser.isSignIn) ? <Link to="/" className="btn btn-main">{loggedInUser.name}</Link>
+                (loggedInUser.isSignIn) ? <Link to="/" className="btn btn-main">{loggedInUser.email}</Link>
                 : <Link to="/signin" className="btn btn-main">SignIn</Link>
             }
      </div>

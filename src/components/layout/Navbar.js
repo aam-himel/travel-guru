@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import logo from "../../LogoDark.png";
+import logo from "../../Logo.png";
 import "./Navbar.css";
 import SignInLinks from "./SignInLinks";
 import SignUpLinks from "./SignUpLinks";
 
 function Navbar() {
   return (
-    <Container>
-      <nav>
+    <header style={{padding:'0 5%', background:'#2f3640', color:'white'}}>
+      <nav style={{color:'white'}}>
         <Link to="/">
         <img src={logo} alt="logo" className="logo" />
         </Link>
@@ -27,7 +27,7 @@ function Navbar() {
           <SignInLinks />
         </ul>
       </nav>
-    </Container>
+    </header>
   );
 }
 

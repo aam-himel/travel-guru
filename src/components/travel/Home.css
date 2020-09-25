@@ -1,5 +1,5 @@
 .hero {
-    height: 100vh;
+    height: 90vh;
     width: 100%;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.698),rgba(0, 0, 0, 0.555)), url('../../Images/Rectangle\ 1.png') no-repeat;
     background-position: center;
