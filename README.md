@@ -9,8 +9,8 @@
 
 ## Tools and Technology
 
-Tools & Technology: React, React Router, Material-UI, Node.js, Express.js and
-Firebase.
+<b>React, React Router, Material-UI, Node.js, Express.js and
+Firebase.<b>
 
 ## Resources
 
