@@ -7,6 +7,11 @@
     - Beautiful looking UI
     - Functional Google map integration for real time price comparison
 
+## Tools and Technology
+
+Tools & Technology: React, React Router, Material-UI, Node.js, Express.js and
+Firebase.
+
 ## Resources
 
 Website: [Live Here](https://travel-guru-aamhimel.netlify.app/) <br>
